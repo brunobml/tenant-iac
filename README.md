@@ -111,3 +111,4 @@ Run the test suite locally from the `gitops-control-plane` repository:
 ```bash
 make ci-iac
 ```
+# CI verified
