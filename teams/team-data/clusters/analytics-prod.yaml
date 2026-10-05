@@ -1,0 +1,10 @@
+team: team-data
+name: analytics
+env: prod
+kubernetesVersion: "1.32"
+network: platform-default
+nodeGroup:
+  instanceType: m5.large
+  minSize: 1
+  desiredSize: 3
+  maxSize: 5
