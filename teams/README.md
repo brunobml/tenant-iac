@@ -36,4 +36,4 @@ nodeGroup:
 - **Filename convention**: The file must be named `<name>-<env>.yaml`.
 - **Team isolation**: A team cannot claim clusters on behalf of another team.
 - **Relational sizing**: Sizing must satisfy `1 <= minSize <= desiredSize <= maxSize`.
-- **Production approval**: Claims targeting `prod` (`*-prod.yaml`) require CODEOWNERS approval (`@brunobml`) before merge.
+- **Production governance**: Claims targeting `prod` (`*-prod.yaml`) request review from platform owner `@brunobml` via CODEOWNERS.

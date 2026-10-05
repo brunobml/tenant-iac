@@ -37,9 +37,10 @@ flowchart LR
 
 1. **Self-Service Claim**: A team commits a file to `teams/<team>/clusters/<name>-<env>.yaml`.
 2. **Automated CI Validation**: GitHub Actions runs `cluster-checks`, verifying the JSON schema, DNS naming, environment bounds, node sizing, and renders offline through `kubeconform`.
-3. **Pull Request Approval**:
-   - `dev` and `test` clusters can be merged upon passing CI.
-   - `prod` clusters (`*-prod.yaml`) require explicit CODEOWNERS review and approval from `@brunobml`.
+3. **Pull Request Gate**:
+   - All changes must be submitted via Pull Request.
+   - Passing `cluster-checks` status check is required on `main`.
+   - `prod` clusters (`*-prod.yaml`) request platform owner review via CODEOWNERS (`@brunobml`).
 4. **GitOps Reconciliation**: Argo CD detects the claim, templates the golden chart (`team-cluster:1.0.0`), and deploys a `TeamEKSCluster` custom resource into spoke namespace `iac-<team>-<env>`.
 5. **Infrastructure Orchestration**: Kro reconciles the resource graph into AWS IAM roles, an EKS cluster, and a managed nodegroup via ACK controllers on the platform's tier-1 network.
 
@@ -86,7 +87,7 @@ nodeGroup:
 ```
 .
 ├── .github/
-│   ├── CODEOWNERS             # Prod approvals enforced by platform owner
+│   ├── CODEOWNERS             # Prod review requested for platform owner
 │   └── workflows/
 │       └── ci.yaml            # cluster-checks CI workflow
 ├── schema/
