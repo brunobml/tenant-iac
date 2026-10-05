@@ -1,0 +1,8 @@
+# CODEOWNERS for tenant-iac
+# Production cluster definitions require platform owner review and approval (prod gate)
+
+# Global repository owner
+* @brunobml
+
+# Production cluster definitions
+/teams/*/clusters/*-prod.yaml @brunobml

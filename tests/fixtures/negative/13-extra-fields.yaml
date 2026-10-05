@@ -1,0 +1,11 @@
+team: team-data
+name: analytics
+env: dev
+kubernetesVersion: "1.33"
+network: platform-default
+extraField: disallowed
+nodeGroup:
+  instanceType: t3.medium
+  minSize: 1
+  desiredSize: 2
+  maxSize: 3

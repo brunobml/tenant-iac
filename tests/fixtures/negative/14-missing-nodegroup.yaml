@@ -1,0 +1,5 @@
+team: team-data
+name: analytics
+env: dev
+kubernetesVersion: "1.33"
+network: platform-default

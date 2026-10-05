@@ -1,0 +1,46 @@
+# 2026-10-05 Tenant IaC (P3): cluster claims validation (JSON Schema, naming, uniqueness,
+# relational sizing bounds, fixtures verification, Helm chart rendering, kubeconform, secret scan).
+# REQUIRED status check (cluster-checks) for pull requests to main.
+name: CI
+
+on:
+  push:
+    # ci-selftest/* branches run the checks without a pull request (negative tests of the CI itself)
+    branches: [main, "ci-selftest/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # superseded PR runs are cancelled; every commit on main keeps its own verdict (post-push alarm)
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  cluster-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: tenant-iac
+      # The CI toolkit (ci/) and ApplicationSet templates live in gitops-control-plane (main).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: brunobml/gitops-control-plane
+          ref: main
+          path: gitops-control-plane
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: gitops-control-plane/ci/labci/go.mod
+          cache-dependency-path: gitops-control-plane/ci/labci/go.sum
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - run: pip install --require-hashes -r gitops-control-plane/ci/requirements.txt
+      - run: gitops-control-plane/ci/check-tenant-iac.sh
+        env:
+          TENANT_IAC_DIR: tenant-iac
